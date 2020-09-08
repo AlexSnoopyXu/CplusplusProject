@@ -12,30 +12,37 @@
 #include <string>
 #include <stack>
 #include <queue>
+#include <tuple>
 
 using namespace std;
 
 class Node {
 public:
     int val;
-    vector<Node*> children;
+    vector<Node*> neighbors;
 
-    Node() {}
+    Node() {
+        val = 0;
+        neighbors = vector<Node*>();
+    }
 
     Node(int _val) {
         val = _val;
+        neighbors = vector<Node*>();
     }
 
-    Node(int _val, vector<Node*> _children) {
+    Node(int _val, vector<Node*> _neighbors) {
         val = _val;
-        children = _children;
+        neighbors = _neighbors;
     }
 };
 
 struct ListNode {
 	int val;
 	ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
 	ListNode(int x) : val(x), next(NULL) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
 };
 
 struct TreeNode {
@@ -2270,32 +2277,535 @@ struct TreeNode {
 //}
 
 
-int countBinarySubstrings(string s) {
+//int countBinarySubstrings(string s) {
+//
+//    int n = s.size();
+//    int last = 0;
+//    int curr = 0;
+//    int result = 0;
+//    char* c = &s[0];
+//    for (int i = 0; i < n; ++i)
+//    {
+//        if (*c == s[i])
+//        {
+//            ++curr;
+//        }
+//        else
+//        {
+//            last = curr;
+//            c = &s[i];
+//            curr = 1;
+//        }
+//
+//        if (last >= curr)
+//        {
+//            ++result;
+//        }
+//    }
+//
+//    return result;
+//}
 
-    int n = s.size();
-    int last = 0;
-    int curr = 0;
-    int result = 0;
-    char* c = &s[0];
-    for (int i = 0; i < n; ++i)
+//int n, m;
+//
+//void dfs(vector<vector<char>>& board, int x, int y) {
+//    if (x < 0 || x >= n || y < 0 || y >= m || board[x][y] != 'O') {
+//        return;
+//    }
+//    board[x][y] = 'A';
+//    if (x + 1 < n) dfs(board, x + 1, y);
+//    if (x - 1 >= 0)dfs(board, x - 1, y);
+//    if (y + 1 < m)dfs(board, x, y + 1);
+//    if (y - 1 >= 0)dfs(board, x, y - 1);
+//}
+//
+//void solve(vector<vector<char>>& board) {
+//    n = board.size();
+//    if (n == 0) {
+//        return;
+//    }
+//    m = board[0].size();
+//    for (int i = 0; i < n; i++) {
+//        dfs(board, i, 0);
+//        dfs(board, i, m - 1);
+//    }
+//    for (int i = 1; i < m - 1; i++) {
+//        dfs(board, 0, i);
+//        dfs(board, n - 1, i);
+//    }
+//    for (int i = 0; i < n; i++) {
+//        for (int j = 0; j < m; j++) {
+//            if (board[i][j] == 'A') {
+//                board[i][j] = 'O';
+//            }
+//            else if (board[i][j] == 'O') {
+//                board[i][j] = 'X';
+//            }
+//        }
+//    }
+//}
+
+//Node* cloneGraph(Node* node) {
+//
+//    if (node == nullptr)
+//    {
+//        return {};
+//    }
+//
+//    Node* result = new Node(1);
+//
+//    if (node->neighbors.size() == 0)
+//    {
+//        return result;
+//    }
+//    
+//    unordered_map<int, Node*> visited;
+//    unordered_map<int, Node*> has;
+//    queue<Node*> que;
+//    que.push(node);
+//    queue<Node*> temp;
+//    temp.push(result);
+//    has[result->val] = result;
+//    while (!que.empty())
+//    {
+//        Node* root = que.front();
+//        que.pop();
+//
+//        Node* n = temp.front();
+//        temp.pop();
+//
+//        visited[root->val] = n;
+//        for (auto& index : root->neighbors)
+//        {
+//            if (visited.find(index->val) == visited.end())
+//            {
+//                Node* t = has.find(index->val) != has.end() ? has.find(index->val)->second : new Node(index->val);
+//                t->neighbors.push_back(n);
+//                n->neighbors.push_back(t);
+//                has[t->val] = t;
+//
+//                que.push(index);
+//                temp.push(t);
+//            }
+//        }
+//    }
+//
+//
+//    return result;
+//}
+
+//string multiply(string num1, string num2)
+//{
+//    string result;
+//    vector<int> str;
+//    bool up = false;
+//    int up_num = 0;
+//    for (int i = num1.size() - 1 ; i >= 0; --i)
+//    {
+//        up = false;
+//        up_num = 0;
+//        str.clear();
+//
+//        int t1 = 0;
+//        if (i >= 0)
+//        {
+//            t1 = num1[i] - 48;
+//        }
+//        for (int j = num2.size() - 1; j >= 0; --j)
+//        {
+//            int t2 = 0;
+//            if (j >= 0)
+//            {
+//                t2 = num2[j] - 48;
+//            }
+//            int tr = t1 * t2 + up_num;
+//            if (tr >= 10)
+//            {
+//                up = true;
+//                up_num = tr / 10;
+//                tr = tr % 10;
+//            }
+//            else
+//            {
+//                up = false;
+//                up_num = 0;
+//            }
+//            str.push_back(tr);
+//        }
+//
+//        if (up)
+//        {
+//            str.push_back(up_num);
+//        }
+//
+//        reverse(str.begin(), str.end());
+//
+//        for (int k = 0; k < num1.size() - i - 1; ++k)
+//        {
+//            str.push_back(0);
+//        }
+//
+//        string r_str;
+//        int n1 = result.size() - 1;
+//        int n2 = str.size() - 1;
+//        up = false;
+//        while (n1 >= 0 || n2 >= 0)
+//        {
+//            int t1 = 0;
+//            if (n1 >= 0)
+//            {
+//                t1 = result[n1] - 48;
+//            }
+//
+//            int t2 = 0;
+//            if (n2 >= 0)
+//            {
+//                t2 = str[n2];
+//            }
+//            int tr = t1 + t2 + ((up) ? 1 : 0);
+//            if (tr >= 10)
+//            {
+//                up = true;
+//                tr = tr % 10;
+//            }
+//            else
+//            {
+//                up = false;
+//            }
+//
+//            char tc = tr + 48;
+//            r_str.push_back(tc);
+//            --n1;
+//            --n2;
+//        }
+//
+//        if (up)
+//        {
+//            r_str.push_back('1');
+//        }
+//
+//        reverse(r_str.begin(), r_str.end());
+//        result = r_str;
+//    }
+//
+//    if (result[0] == '0')
+//    {
+//        return "0";
+//    }
+//    return result;
+//}
+
+//const int dir[4][2] = { {0,1},{0,-1},{1,0},{-1,0} };
+//void dfs(vector<vector<int>>& image, int x, int y, int color, int newColor) {
+//    if (image[x][y] == color) {
+//        image[x][y] = newColor;
+//        for (int i = 0; i < 4; i++) {
+//            int mx = x + dir[i][0], my = y + dir[i][1];
+//            if (mx >= 0 && mx < image.size() && my >= 0 && my < image[0].size()) {
+//                dfs(image, mx, my, color, newColor);
+//            }
+//        }
+//    }
+//}
+//
+//vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+//    int currColor = image[sr][sc];
+//    if (currColor != newColor) {
+//        dfs(image, sr, sc, currColor, newColor);
+//    }
+//    return image;
+//}
+
+//vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+//
+//    int n = image.size();
+//    int m = image[0].size();
+//    int currColor = image[sr][sc];
+//    if (currColor == newColor)
+//    {
+//        return image;
+//    }
+//
+//    int dir[4][2] = { {0,1},{0,-1},{1,0},{-1,0} };
+//    queue<pair<int, int>> que;
+//    que.push({ sr,sc });
+//    image[sr][sc] = newColor;
+//    while (!que.empty())
+//    {
+//        int x = que.front().first;
+//        int y = que.front().second;
+//        que.pop();
+//
+//        for (int i = 0; i < 4; ++i)
+//        {
+//            int t_x = x + dir[i][0];
+//            int t_y = y + dir[i][1];
+//            if (t_x < 0 || t_y < 0 || t_x >= n || t_y >= m || image[t_x][t_y] == newColor || image[t_x][t_y] == 0)
+//            {
+//                continue;
+//            }
+//            image[t_x][t_y] = newColor;
+//            que.push({ t_x,t_y });
+//        }
+//    }
+//
+//    return image;
+//}
+
+//TreeNode* sortedListToBST(ListNode* head) {
+//
+//}
+//
+
+
+//TreeNode* sortedArrayToBSTHelper(vector<int>& nums, int b, int e)
+//{
+//    if (b > e)
+//    {
+//        return nullptr;
+//    }
+//
+//    int mid = (e + b) / 2;
+//    TreeNode* root = new TreeNode(nums[mid]);
+//    root->left = sortedArrayToBSTHelper(nums, b, mid - 1);
+//    root->right = sortedArrayToBSTHelper(nums, mid + 1, e);
+//    return root;
+//}
+//
+//TreeNode* sortedArrayToBST(vector<int>& nums)
+//{
+//    return sortedArrayToBSTHelper(nums, 0, nums.size() - 1);
+//}
+
+//int countSubstrings(string s) {
+//    int n = s.size();
+//    int result = 0;
+//    vector<vector<bool>> dp(n, vector<bool>(n, false));
+//
+//    for (int i = 0; i < n; ++i)
+//    {
+//        for (int j = 0; j <= i; ++j)
+//        {
+//            if (i == j)
+//            {
+//                dp[j][i] = true;
+//                ++result;
+//            }
+//            else if (i - j == 1 && s[i] == s[j])
+//            {
+//                dp[j][i] = true;
+//                ++result;
+//            }
+//            else if (i - j > 1 && s[i] == s[j] && dp[j + 1][i - 1])
+//            {
+//                dp[j][i] = true;
+//                ++result;
+//            }
+//        }
+//    }
+//
+//    return result;
+//}
+
+//int dir_x[8] = { 0, 1, 0, -1, 1, 1, -1, -1 };
+//int dir_y[8] = { 1, 0, -1, 0, 1, -1, 1, -1 };
+//
+//void dfs(vector<vector<char>>& board, int x, int y) {
+//    int cnt = 0;
+//    for (int i = 0; i < 8; ++i) {
+//        int tx = x + dir_x[i];
+//        int ty = y + dir_y[i];
+//        if (tx < 0 || tx >= board.size() || ty < 0 || ty >= board[0].size()) {
+//            continue;
+//        }
+//        // 不用判断 M，因为如果有 M 的话游戏已经结束了
+//        cnt += board[tx][ty] == 'M';
+//    }
+//    if (cnt > 0) {
+//        // 规则 3
+//        board[x][y] = cnt + '0';
+//    }
+//    else {
+//        // 规则 2
+//        board[x][y] = 'B';
+//        for (int i = 0; i < 8; ++i) {
+//            int tx = x + dir_x[i];
+//            int ty = y + dir_y[i];
+//            // 这里不需要在存在 B 的时候继续扩展，因为 B 之前被点击的时候已经被扩展过了
+//            if (tx < 0 || tx >= board.size() || ty < 0 || ty >= board[0].size() || board[tx][ty] != 'E') {
+//                continue;
+//            }
+//            dfs(board, tx, ty);
+//        }
+//    }
+//}
+//
+//vector<vector<char>> updateBoard(vector<vector<char>>& board, vector<int>& click) {
+//    int x = click[0], y = click[1];
+//    if (board[x][y] == 'M') {
+//        // 规则 1
+//        board[x][y] = 'X';
+//    }
+//    else {
+//        dfs(board, x, y);
+//    }
+//    return board;
+//}
+
+//int rangeBitwiseAnd(int m, int n) {
+//    int result = 0;
+//
+//    if (m == n)
+//    {
+//        return m;
+//    }
+//
+//    for (int i = 0; i < 31; ++i)
+//    {
+//        u_int temp1 = 1 << i;
+//        u_int temp2 = 1 << (i + 1);
+//        
+//        if (m >= temp1 && n < temp2)
+//        {
+//            result = temp1 + rangeBitwiseAnd(m - temp1, n - temp1);
+//            break;
+//        }
+//    }
+//
+//    return result;
+//}
+
+//vector<int> temp;
+//vector<vector<int>> ans;
+//
+//void findSubsequencesDfs(int cur, int last, vector<int>& nums) {
+//    if (cur == nums.size()) {
+//        if (temp.size() >= 2) {
+//            ans.push_back(temp);
+//        }
+//        return;
+//    }
+//    if (nums[cur] >= last) {
+//        temp.push_back(nums[cur]);
+//        findSubsequencesDfs(cur + 1, nums[cur], nums);
+//        temp.pop_back();
+//    }
+//    if (nums[cur] != last) {
+//        findSubsequencesDfs(cur + 1, last, nums);
+//    }
+//}
+//
+//vector<vector<int>> findSubsequences(vector<int>& nums) {
+//    findSubsequencesDfs(0, INT_MIN, nums);
+//    return ans;
+//}
+
+//vector<int> vis;
+//int num;
+//
+//void dfs(vector<vector<int>>& rooms, int x) {
+//    vis[x] = true;
+//    num++;
+//    for (auto& it : rooms[x]) {
+//        if (!vis[it]) {
+//            dfs(rooms, it);
+//        }
+//    }
+//}
+//
+//bool canVisitAllRooms(vector<vector<int>>& rooms) {
+//    int n = rooms.size();
+//    num = 0;
+//    vis.resize(n);
+//    dfs(rooms, 0);
+//    return num == n;
+//}
+
+//vector<vector<int>> levelOrderBottom(TreeNode* root) {
+//    vector<vector<int>> result;
+//    if (!root) {
+//        return result;
+//    }
+//    queue<TreeNode*> q;
+//    q.push(root);
+//    vector<int> level;
+//    while (!q.empty()) {
+//
+//        int size = q.size();
+//        for (int i = 0; i < size; ++i) {
+//            auto node = q.front();
+//            q.pop();
+//            level.push_back(node->val);
+//            if (node->left) {
+//                q.push(node->left);
+//            }
+//            if (node->right) {
+//                q.push(node->right);
+//            }
+//        }
+//        if (!level.empty()) result.push_back(level);
+//        level.clear();
+//    }
+//    reverse(result.begin(), result.end());
+//    return result;
+//}
+
+//class mycomparison {
+//public:
+//    bool operator()(const pair<int, int>& lhs, const pair<int, int>& rhs) {
+//        return lhs.second > rhs.second;
+//    }
+//};
+//
+//    vector<int> topKFrequent(vector<int>& nums, int k) {
+//        // 要统计元素出现频率
+//        unordered_map<int, int> map; // map<nums[i],对应出现的次数>
+//        for (int i = 0; i < nums.size(); i++) {
+//            map[nums[i]]++;
+//        }
+//
+//        // 对频率排序
+//        // 定义一个小顶堆，大小为k
+//        priority_queue<pair<int, int>, vector<pair<int, int>>, mycomparison> pri_que;
+//        for (unordered_map<int, int>::iterator it = map.begin(); it != map.end(); it++) {
+//            pri_que.push(*it);
+//            if (pri_que.size() > k) {
+//                pri_que.pop();
+//            }
+//        }
+//
+//        // 找出前K个高频元素，因为小顶堆先弹出的是最小的，所以倒叙来数值数组
+//        vector<int> result(k);
+//        for (int i = k - 1; i >= 0; i--) {
+//            result[i] = pri_que.top().first;
+//            pri_que.pop();
+//        }
+//        return result;
+//
+//    }
+
+vector<vector<int>> result;
+vector<int> temp;
+
+void combineHelper(int b, int e, int k)
+{
+    if (k == 0)
     {
-        if (*c == s[i])
-        {
-            ++curr;
-        }
-        else
-        {
-            last = curr;
-            c = &s[i];
-            curr = 1;
-        }
-
-        if (last >= curr)
-        {
-            ++result;
-        }
+        result.push_back(temp);
+        return;
     }
 
+    for (int i = b; i <= e; ++i)
+    {
+        temp.push_back(i);
+        combineHelper(i + 1, e, k - 1);
+        temp.pop_back();
+    }
+}
+
+vector<vector<int>> combine(int n, int k) {
+
+    combineHelper(1, n, k);
     return result;
 }
 
@@ -2304,8 +2814,39 @@ int main()
 {
     std::cout << "Hello World!\n";
 
-    cout << countBinarySubstrings("00110011") << endl;
+    combine(4, 3);
 
+    /*cout << rangeBitwiseAnd(2147483646,2147483647) << endl;*/
+
+    /*cout << countSubstrings("aaa") << endl;*/
+
+    /*vector<int> a{ -10,-3,0,5,9 };
+    sortedArrayToBST(a);*/
+
+    /*vector<vector<int>> a{ {1,1,1} ,{1,1,0},{1,0,1} };
+    floodFill(a, 1, 1, 2);*/
+
+    //cout << multiply("12", "65") << endl;
+
+    /*Node a1(1);
+    Node a2(2);
+    Node a3(3);
+    Node a4(4);
+    a1.neighbors.push_back(&a2);
+    a1.neighbors.push_back(&a4);
+
+    a2.neighbors.push_back(&a1);
+    a2.neighbors.push_back(&a3);
+
+    a3.neighbors.push_back(&a2);
+    a3.neighbors.push_back(&a4);
+
+    a4.neighbors.push_back(&a1);
+    a4.neighbors.push_back(&a3);
+
+    cloneGraph(&a1);*/
+
+    //cout << countBinarySubstrings("00110011") << endl;
 
     /*restoreIpAddresses("25525511135");*/
 
