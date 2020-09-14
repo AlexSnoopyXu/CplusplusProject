@@ -2784,29 +2784,226 @@ struct TreeNode {
 //
 //    }
 
-vector<vector<int>> result;
-vector<int> temp;
+//vector<vector<int>> result;
+//vector<int> temp;
+//
+//void combineHelper(int b, int e, int k)
+//{
+//    if (k == 0)
+//    {
+//        result.push_back(temp);
+//        return;
+//    }
+//
+//    for (int i = b; i <= e; ++i)
+//    {
+//        temp.push_back(i);
+//        combineHelper(i + 1, e, k - 1);
+//        temp.pop_back();
+//    }
+//}
+//
+//vector<vector<int>> combine(int n, int k) {
+//
+//    combineHelper(1, n, k);
+//    return result;
+//}
 
-void combineHelper(int b, int e, int k)
+//vector<vector<int>> result;
+//vector<int> temp;
+//
+//void combinationSumHelper(vector<int>& candidates, int b, int t)
+//{
+//    if (t == 0)
+//    {
+//        result.push_back(temp);
+//        return;
+//    }
+//
+//    int n = candidates.size();
+//    for (int i = b; i < n; ++i)
+//    {
+//        int sub = t - candidates[i];
+//        if (sub < 0)
+//        {
+//            continue;
+//        }
+//        temp.push_back(candidates[i]);
+//        combinationSumHelper(candidates, i, sub);
+//        temp.pop_back();
+//    }
+//}
+//
+//vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+//
+//
+//    combinationSumHelper(candidates, 0, target);
+//    return result;
+//}
+
+//vector<pair<int, int>> dir = { {0,1},{1,0}, {0,-1},{-1,0} };
+//
+//bool existHelper(vector<vector<char>>& board, string& word, vector<vector<bool>>& visited, int i,int j,int index) {
+//    if (word[index] != board[i][j])
+//    {
+//        return false;
+//    }
+//    
+//    if (index == word.size() - 1)
+//    {
+//        return true;
+//    }
+//
+//    visited[i][j] = true;
+//    for (int d = 0; d < 4; ++d)
+//    {
+//        int x = i + dir[d].first;
+//        int y = i + dir[d].second;
+//        if (x >= 0 && x < visited.size() && y >= 0 && y < visited[0].size() && !visited[x][y])
+//        {
+//            if (existHelper(board, word, visited, i, j, index + 1))
+//            {
+//                return true;
+//            }
+//        }
+//    }
+//
+//    visited[i][j] = false;
+//
+//    return false;
+//}
+//
+//bool exist(vector<vector<char>>& board, string word) {
+//    
+//    int n = board.size();
+//    int m = board[0].size();
+//    vector<vector<bool>> visited(n,vector<bool>(m,false));
+//    for (int i = 0; i < n; ++i)
+//    {
+//        for (int j = 0; j < m; ++j)
+//        {
+//            if (existHelper(board, word, visited,i,j,0))
+//            {
+//                return true;
+//            }
+//        }
+//    }
+//    return false;
+//}
+
+//int removeDuplicates(vector<int>& nums) {
+//    if (nums.size() == 0)
+//    {
+//        return 0;
+//    }
+//    int i = 0;
+//    int j = 1;
+//    int result = 1;
+//    while (j < nums.size())
+//    {
+//        if (nums[i] != nums[j])
+//        {
+//            ++i;
+//            swap(nums[i], nums[j]);
+//            
+//            ++result;
+//        }
+//        ++j;
+//    }
+//
+//    return result;
+//}
+
+//int removeElement(vector<int>& nums, int val) {
+//    int i = 0;
+//    int n = nums.size();
+//    while (i < n) {
+//        if (nums[i] == val) {
+//            nums[i] = nums[n - 1];
+//            // reduce array size by one
+//            n--;
+//        }
+//        else {
+//            i++;
+//        }
+//    }
+//    return n;
+//}
+
+
+//vector<int> preorderTraversal(TreeNode* root) {
+//
+//    if (root == nullptr)
+//    {
+//        return {};
+//    }
+//    vector<int> result;
+//    stack<TreeNode*> stk;
+//    stk.push(root);
+//    while (!stk.empty() && root != nullptr)
+//    {
+//        TreeNode* root = stk.top();
+//        stk.pop();
+//
+//        result.push_back(root->val);
+//        if (root->right)
+//        {
+//            stk.push(root->right);
+//        }
+//        if (root->left)
+//        {
+//            stk.push(root->left);
+//        }
+//    }
+//
+//    return result;
+//}
+
+//vector<int> postorderTraversal(TreeNode* root) {
+//    stack<TreeNode*> st;
+//    vector<int> result;
+//    st.push(root);
+//    while (!st.empty()) {
+//        TreeNode* node = st.top();
+//        st.pop();
+//        if (node != NULL) result.push_back(node->val);
+//        else continue;
+//        st.push(node->left); // 相对于前序遍历，这更改一下入栈顺序
+//        st.push(node->right);
+//    }
+//    reverse(result.begin(), result.end()); // 将结果反转之后就是左右中的顺序了
+//    return result;
+//}
+
+//int result;
+//int n = 0;
+//int kthSmallest(TreeNode* root, int k) {
+//    if (root)
+//    {
+//        kthSmallest(root->left, k);
+//        ++n;
+//        if (k == n)
+//        {
+//            result = root->val;
+//        }
+//        kthSmallest(root->right, k);
+//    }
+//
+//    return result;
+//}
+
+int count(TreeNode* root)
+//获取结点个数
 {
-    if (k == 0)
-    {
-        result.push_back(temp);
-        return;
-    }
-
-    for (int i = b; i <= e; ++i)
-    {
-        temp.push_back(i);
-        combineHelper(i + 1, e, k - 1);
-        temp.pop_back();
-    }
+    if (root == nullptr) return 0;
+    return 1 + count(root->left) + count(root->right);
 }
+int kthSmallest(TreeNode* root, int k) {
+    int cnt = count(root->left);//左子树结点个数
+    if (cnt == k - 1) return root->val;
+    else if (cnt > k - 1) return kthSmallest(root->left, k);
+    else return kthSmallest(root->right, k - cnt - 1);
 
-vector<vector<int>> combine(int n, int k) {
-
-    combineHelper(1, n, k);
-    return result;
 }
 
 
@@ -2814,7 +3011,16 @@ int main()
 {
     std::cout << "Hello World!\n";
 
-    combine(4, 3);
+    /*ector<int> a{ 0,1,2,2,3,0,4,2 };
+    removeElement(a, 2);*/
+
+    /*vector<int> a{ 1,1,2 };
+    removeDuplicates(a);*/
+
+    /*vector<int> a{ 2,3,6,7 };
+    combinationSum(a, 8);*/
+
+    /*combine(4, 3);*/
 
     /*cout << rangeBitwiseAnd(2147483646,2147483647) << endl;*/
 
