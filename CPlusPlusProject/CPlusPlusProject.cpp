@@ -2992,18 +2992,32 @@ struct TreeNode {
 //    return result;
 //}
 
-int count(TreeNode* root)
-//获取结点个数
-{
-    if (root == nullptr) return 0;
-    return 1 + count(root->left) + count(root->right);
-}
-int kthSmallest(TreeNode* root, int k) {
-    int cnt = count(root->left);//左子树结点个数
-    if (cnt == k - 1) return root->val;
-    else if (cnt > k - 1) return kthSmallest(root->left, k);
-    else return kthSmallest(root->right, k - cnt - 1);
+//int count(TreeNode* root)
+////获取结点个数
+//{
+//    if (root == nullptr) return 0;
+//    return 1 + count(root->left) + count(root->right);
+//}
+//int kthSmallest(TreeNode* root, int k) {
+//    int cnt = count(root->left);//左子树结点个数
+//    if (cnt == k - 1) return root->val;
+//    else if (cnt > k - 1) return kthSmallest(root->left, k);
+//    else return kthSmallest(root->right, k - cnt - 1);
+//
+//}
 
+TreeNode* invertTree(TreeNode* root) {
+    if (root != nullptr)
+    {
+        TreeNode* temp = root->left;
+        root->left = root->right;
+        root->right = temp;
+
+        invertTree(root->left);
+        invertTree(root->right);
+    }
+
+    return root;
 }
 
 
