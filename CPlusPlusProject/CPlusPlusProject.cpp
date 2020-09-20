@@ -3006,20 +3006,114 @@ struct TreeNode {
 //
 //}
 
-TreeNode* invertTree(TreeNode* root) {
-    if (root != nullptr)
-    {
-        TreeNode* temp = root->left;
-        root->left = root->right;
-        root->right = temp;
+//TreeNode* invertTree(TreeNode* root) {
+//    if (root != nullptr)
+//    {
+//        TreeNode* temp = root->left;
+//        root->left = root->right;
+//        root->right = temp;
+//
+//        invertTree(root->left);
+//        invertTree(root->right);
+//    }
+//
+//    return root;
+//}
 
-        invertTree(root->left);
-        invertTree(root->right);
+//vector<int> vis;
+//void backtrack(vector<int>& nums, vector<vector<int>>& ans, int idx, vector<int>& perm) {
+//    if (idx == nums.size()) {
+//        ans.emplace_back(perm);
+//        return;
+//    }
+//    for (int i = 0; i < (int)nums.size(); ++i) {
+//        if (vis[i] || (i > 0 && nums[i] == nums[i - 1] && !vis[i - 1])) {
+//            continue;
+//        }
+//        perm.emplace_back(nums[i]);
+//        vis[i] = 1;
+//        backtrack(nums, ans, idx + 1, perm);
+//        vis[i] = 0;
+//        perm.pop_back();
+//    }
+//}
+//
+//vector<vector<int>> permuteUnique(vector<int>& nums) {
+//    vector<vector<int>> ans;
+//    vector<int> perm;
+//    vis.resize(nums.size());
+//    sort(nums.begin(), nums.end());
+//    backtrack(nums, ans, 0, perm);
+//    return ans;
+//}
+
+//int sumOfLeftLeaves(TreeNode* root) {
+//    int result = 0;
+//    
+//    if (root == nullptr)
+//    {
+//        return result;
+//    }
+//
+//    queue<TreeNode*> que;
+//    que.push(root);
+//    while (!que.empty())
+//    {
+//        root = que.front();
+//        que.pop();
+//
+//        if (root->left != nullptr)
+//        {   
+//            if (root->left->left == nullptr && root->left->right == nullptr)
+//            {
+//                result += root->left->val;
+//            }
+//            else
+//            {
+//                que.push(root->left);
+//            }
+//        }
+//        if (root->right != nullptr)
+//        {
+//            que.push(root->right);
+//        }
+//    }
+//
+//    return result;
+//}
+
+//string intToRoman(int num) {
+//	int values[] = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+//	string reps[] = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+//
+//	string res;
+//	for (int i = 0; i < 13; i++)  //这里不使用图里的count了，一遍一遍来就行了
+//		while (num >= values[i])
+//		{
+//			num -= values[i];
+//			res += reps[i];
+//		}
+//	return res;
+//}
+
+vector<int> t;
+vector<vector<int>> ans;
+
+void dfs(int cur, vector<int>& nums) {
+    if (cur == nums.size()) {
+        ans.push_back(t);
+        return;
     }
-
-    return root;
+    t.push_back(nums[cur]);
+    dfs(cur + 1, nums);
+    t.pop_back();
+    dfs(cur + 1, nums);
 }
 
+vector<vector<int>> subsets(vector<int>& nums) {
+    dfs(0, nums);
+    return ans;
+}
 
 int main()
 {
