@@ -3096,28 +3096,139 @@ struct TreeNode {
 //	return res;
 //}
 
-vector<int> t;
-vector<vector<int>> ans;
+//vector<int> t;
+//vector<vector<int>> ans;
+//
+//void dfs(int cur, vector<int>& nums) {
+//    if (cur == nums.size()) {
+//        ans.push_back(t);
+//        return;
+//    }
+//    t.push_back(nums[cur]);
+//    dfs(cur + 1, nums);
+//    t.pop_back();
+//    dfs(cur + 1, nums);
+//}
+//
+//vector<vector<int>> subsets(vector<int>& nums) {
+//    dfs(0, nums);
+//    return ans;
+//}
 
-void dfs(int cur, vector<int>& nums) {
-    if (cur == nums.size()) {
-        ans.push_back(t);
+
+//vector<vector<int>> ans;
+//
+//void dfs(vector<int>& nums, int idx, vector<int>& temp) {
+//    ans.push_back(temp);
+//    if (idx == nums.size()) {
+//        return;
+//    }
+//    for (int i = idx; i < nums.size(); i++) {
+//        if (i > idx && nums[i] == nums[i - 1]) continue;
+//        temp.push_back(nums[i]);
+//        dfs(nums, i + 1, temp);
+//        temp.pop_back();
+//    }
+//}
+//vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+//    sort(nums.begin(), nums.end());
+//    vector<int> temp;
+//    dfs(nums, 0, temp);
+//    return ans;
+//}
+
+//int sum = 0;
+//TreeNode* convertBST(TreeNode* root) {
+//
+//    if (root != nullptr) {
+//        convertBST(root->right);
+//        sum += root->val;
+//        root->val = sum;
+//        convertBST(root->left);
+//    }
+//    return root;
+//}
+
+//TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {
+//    if (t1 == nullptr)
+//    {
+//        return t2;
+//    }
+//
+//    if (t2 == nullptr)
+//    {
+//        return t1;
+//    }
+//
+//    auto merged = new TreeNode(t1->val + t2->val);
+//    merged->left = mergeTrees(t1->left, t2->left);
+//    merged->right = mergeTrees(t1->right, t2->right);
+//    return merged;
+//}
+
+int c;
+int maxCount;
+TreeNode* pre;
+vector<int> result;
+void findModeBST(TreeNode* cur)
+{
+    if (cur == nullptr)
+    {
         return;
     }
-    t.push_back(nums[cur]);
-    dfs(cur + 1, nums);
-    t.pop_back();
-    dfs(cur + 1, nums);
+
+    findModeBST(cur->left);
+
+    if (pre == nullptr)
+    {
+        c = 1;
+    }
+    else if (pre->val == cur->val)
+    {
+        ++c;
+    }
+    else
+    {
+        c = 1;
+    }
+    pre = cur;
+
+    if (c == maxCount)
+    {
+        result.push_back(cur->val);
+    }
+
+    if (c > maxCount)
+    {
+        maxCount = c;
+        result.clear();
+        result.push_back(cur->val);
+    }
+
+    findModeBST(cur->right);
 }
 
-vector<vector<int>> subsets(vector<int>& nums) {
-    dfs(0, nums);
-    return ans;
+vector<int> findMode(TreeNode* root) {
+    c = 0;
+    maxCount = 0;
+    pre = nullptr;
+    result.clear();
+
+    findModeBST(root);
+    return result;
 }
+
 
 int main()
 {
     std::cout << "Hello World!\n";
+
+    /*TreeNode a(5);
+    TreeNode b(2);
+    TreeNode c(13);
+    a.left = &b;
+    a.right = &c;
+    convertBST(&a);*/
 
     /*ector<int> a{ 0,1,2,2,3,0,4,2 };
     removeElement(a, 2);*/
