@@ -3166,62 +3166,168 @@ struct TreeNode {
 //    return merged;
 //}
 
-int c;
-int maxCount;
-TreeNode* pre;
-vector<int> result;
-void findModeBST(TreeNode* cur)
+//int c;
+//int maxCount;
+//TreeNode* pre;
+//vector<int> result;
+//void findModeBST(TreeNode* cur)
+//{
+//    if (cur == nullptr)
+//    {
+//        return;
+//    }
+//
+//    findModeBST(cur->left);
+//
+//    if (pre == nullptr)
+//    {
+//        c = 1;
+//    }
+//    else if (pre->val == cur->val)
+//    {
+//        ++c;
+//    }
+//    else
+//    {
+//        c = 1;
+//    }
+//    pre = cur;
+//
+//    if (c == maxCount)
+//    {
+//        result.push_back(cur->val);
+//    }
+//
+//    if (c > maxCount)
+//    {
+//        maxCount = c;
+//        result.clear();
+//        result.push_back(cur->val);
+//    }
+//
+//    findModeBST(cur->right);
+//}
+//
+//vector<int> findMode(TreeNode* root) {
+//    c = 0;
+//    maxCount = 0;
+//    pre = nullptr;
+//    result.clear();
+//
+//    findModeBST(root);
+//    return result;
+//}
+
+//vector<vector<int>> ret;
+//vector<int> path;
+//
+//void pathSumDfs(TreeNode* root, int sum) {
+//    if (root == nullptr) {
+//        return;
+//    }
+//    path.emplace_back(root->val);
+//    sum -= root->val;
+//    if (root->left == nullptr && root->right == nullptr && sum == 0) {
+//        ret.emplace_back(path);
+//    }
+//    pathSumDfs(root->left, sum);
+//    pathSumDfs(root->right, sum);
+//    path.pop_back();
+//}
+//
+//vector<vector<int>> pathSum(TreeNode* root, int sum) {
+//    pathSumDfs(root, sum);
+//    return ret;
+//}
+
+//TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+//    TreeNode* result = root;
+//
+//    while (true)
+//    {
+//        if (result->val > p->val && result->val > q->val)
+//        {
+//            result = result->left;
+//        }
+//        else if (result->val < p->val && result->val < q->val)
+//        {
+//            result = result->right;
+//        }
+//        else
+//        {
+//            break;
+//        }
+//    }
+//
+//    return result;
+//
+//}
+
+vector<TreeNode*> temp;
+bool isEnd;
+void lowestCommonAncestorDfs(TreeNode* root, int target)
 {
-    if (cur == nullptr)
+    if (isEnd)
     {
         return;
     }
 
-    findModeBST(cur->left);
-
-    if (pre == nullptr)
+    if (root == nullptr)
     {
-        c = 1;
-    }
-    else if (pre->val == cur->val)
-    {
-        ++c;
-    }
-    else
-    {
-        c = 1;
-    }
-    pre = cur;
-
-    if (c == maxCount)
-    {
-        result.push_back(cur->val);
+        return;
     }
 
-    if (c > maxCount)
+    temp.push_back(root);
+    if (root->val == target)
     {
-        maxCount = c;
-        result.clear();
-        result.push_back(cur->val);
+        isEnd = true;
+        return;
     }
 
-    findModeBST(cur->right);
+    lowestCommonAncestorDfs(root->left, target);
+    lowestCommonAncestorDfs(root->right, target);
+    if (!isEnd)
+    {
+        temp.pop_back();
+    }
 }
 
-vector<int> findMode(TreeNode* root) {
-    c = 0;
-    maxCount = 0;
-    pre = nullptr;
-    result.clear();
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    isEnd = false;
+    temp.empty();
+    lowestCommonAncestorDfs(root, p->val);
+    vector<TreeNode*> path_p = temp;
+    isEnd = false;
+    temp.clear();
+    lowestCommonAncestorDfs(root, q->val);
+    vector<TreeNode*> path_q = temp;
 
-    findModeBST(root);
+    TreeNode* result = root;
+    for (int i = 0; i < path_p.size() && i < path_q.size(); ++i)
+    {
+        if (path_p[i] == path_q[i])
+        {
+            result = path_p[i];
+        }
+        else
+        {
+            break;
+        }
+    }
+
     return result;
 }
-
 
 int main()
 {
     std::cout << "Hello World!\n";
+
+    TreeNode a(3);
+    TreeNode b(5);
+    TreeNode c(1);
+    a.left = &b;
+    a.right = &c;
+    lowestCommonAncestor(&a, &b, &c);
 
     /*TreeNode a(5);
     TreeNode b(2);
