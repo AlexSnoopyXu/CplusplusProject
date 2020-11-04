@@ -16,25 +16,40 @@
 
 using namespace std;
 
+//class Node {
+//public:
+//    int val;
+//    vector<Node*> neighbors;
+//
+//    Node() {
+//        val = 0;
+//        neighbors = vector<Node*>();
+//    }
+//
+//    Node(int _val) {
+//        val = _val;
+//        neighbors = vector<Node*>();
+//    }
+//
+//    Node(int _val, vector<Node*> _neighbors) {
+//        val = _val;
+//        neighbors = _neighbors;
+//    }
+//};
+
 class Node {
 public:
     int val;
-    vector<Node*> neighbors;
+    Node* left;
+    Node* right;
+    Node* next;
 
-    Node() {
-        val = 0;
-        neighbors = vector<Node*>();
-    }
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
 
-    Node(int _val) {
-        val = _val;
-        neighbors = vector<Node*>();
-    }
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
 
-    Node(int _val, vector<Node*> _neighbors) {
-        val = _val;
-        neighbors = _neighbors;
-    }
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
 };
 
 struct ListNode {
@@ -3263,71 +3278,464 @@ struct TreeNode {
 //
 //}
 
-vector<TreeNode*> temp;
-bool isEnd;
-void lowestCommonAncestorDfs(TreeNode* root, int target)
-{
-    if (isEnd)
-    {
-        return;
-    }
+//vector<TreeNode*> temp;
+//bool isEnd;
+//void lowestCommonAncestorDfs(TreeNode* root, int target)
+//{
+//    if (isEnd)
+//    {
+//        return;
+//    }
+//
+//    if (root == nullptr)
+//    {
+//        return;
+//    }
+//
+//    temp.push_back(root);
+//    if (root->val == target)
+//    {
+//        isEnd = true;
+//        return;
+//    }
+//
+//    lowestCommonAncestorDfs(root->left, target);
+//    lowestCommonAncestorDfs(root->right, target);
+//    if (!isEnd)
+//    {
+//        temp.pop_back();
+//    }
+//}
+//
+//TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+//    isEnd = false;
+//    temp.empty();
+//    lowestCommonAncestorDfs(root, p->val);
+//    vector<TreeNode*> path_p = temp;
+//    isEnd = false;
+//    temp.clear();
+//    lowestCommonAncestorDfs(root, q->val);
+//    vector<TreeNode*> path_q = temp;
+//
+//    TreeNode* result = root;
+//    for (int i = 0; i < path_p.size() && i < path_q.size(); ++i)
+//    {
+//        if (path_p[i] == path_q[i])
+//        {
+//            result = path_p[i];
+//        }
+//        else
+//        {
+//            break;
+//        }
+//    }
+//
+//    return result;
+//}
 
+//Node* connect(Node* root) {
+//    if (root == nullptr)
+//    {
+//        return nullptr;
+//    }
+//
+//    queue<Node*> que;
+//    que.push(root);
+//    while (!que.empty())
+//    {
+//        int n = que.size();
+//        Node* last = nullptr;
+//        for (int i = 0; i < n; ++i)
+//        {
+//            Node* f = que.front();
+//            que.pop();
+//            if (f->left)
+//            {
+//                que.push(f->left);
+//            }
+//
+//            if (f->right)
+//            {
+//                que.push(f->right);
+//            }
+//
+//            if (i != 0)
+//            {
+//                last->next = f;
+//            }
+//
+//            last = f;
+//        }
+//    }
+//
+//    return root;
+//}
+
+//TreeNode* insertIntoBST(TreeNode* root, int val) {
+//    if (root == nullptr) {
+//        return new TreeNode(val);
+//    }
+//
+//    if (val < root->val) {
+//        root->left = insertIntoBST(root->left, val);
+//    }
+//    else {
+//        root->right = insertIntoBST(root->right, val);
+//    }
+//    return root;
+//}
+
+//void getMinimumDifferenceDfs(TreeNode* root, int& pre, int& result)
+//{
+//    if (root == nullptr)
+//    {
+//        return;
+//    }
+//
+//    getMinimumDifferenceDfs(root->left, pre, result);
+//    if (pre != -1)
+//    {
+//        result = min(result, root->val - pre);
+//        pre = root->val;
+//        
+//    }
+//    pre = root->val;
+//    getMinimumDifferenceDfs(root->right, pre, result);
+//
+//}
+//
+//int getMinimumDifference(TreeNode* root) {
+//    int result = INT_MAX;
+//    int pre = -1;
+//
+//    getMinimumDifferenceDfs(root, pre, result);
+//    return result;
+//}
+
+//string backspaceCompareHelper(string s)
+//{
+//    string ret;
+//    for (auto& c : s)
+//    {
+//        if (c != '#')
+//        {
+//            ret.push_back(c);
+//        }
+//        else if (!ret.empty())
+//        {
+//            ret.pop_back();
+//        }
+//    }
+//
+//    return ret;
+//}
+//
+//bool backspaceCompare(string S, string T) {
+//    return backspaceCompareHelper(S) == backspaceCompareHelper(T);
+//}
+
+//bool backspaceCompare(string S, string T) {
+//    int i = S.length() - 1, j = T.length() - 1;
+//    int skipS = 0, skipT = 0;
+//
+//    while (i >= 0 || j >= 0) {
+//        while (i >= 0) {
+//            if (S[i] == '#') {
+//                skipS++, i--;
+//            }
+//            else if (skipS > 0) {
+//                skipS--, i--;
+//            }
+//            else {
+//                break;
+//            }
+//        }
+//        while (j >= 0) {
+//            if (T[j] == '#') {
+//                skipT++, j--;
+//            }
+//            else if (skipT > 0) {
+//                skipT--, j--;
+//            }
+//            else {
+//                break;
+//            }
+//        }
+//        if (i >= 0 && j >= 0) {
+//            if (S[i] != T[j]) {
+//                return false;
+//            }
+//        }
+//        else {
+//            if (i >= 0 || j >= 0) {
+//                return false;
+//            }
+//        }
+//        i--, j--;
+//    }
+//    return true;
+//}
+
+//ListNode* middleNode(ListNode* head) {
+//    ListNode* low = head;
+//    ListNode* fast = head;
+//    while (fast != nullptr && fast->next != nullptr)
+//    {
+//        low = low->next;
+//        fast = fast->next->next;
+//    }
+//    return low;
+//}
+//
+//ListNode* reverseList(ListNode* head) {
+//    ListNode* prev = head;
+//    ListNode* curr = nullptr;
+//    while (curr != nullptr) {
+//        ListNode* nextTemp = curr->next;
+//        curr->next = prev;
+//        prev = curr;
+//        curr = nextTemp;
+//    }
+//    return prev;
+//}
+//
+//bool isLongPressedName(string name, string typed) {
+//    int n = 0;
+//    int t = 0;
+//    while (t < typed.length())
+//    {
+//        if (n<name.length() && name[n] == typed[t])
+//        {
+//            ++n;
+//            ++t;
+//        }
+//        else if (t > 0 && typed[t] == typed[t - 1])
+//        {
+//            ++t;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
+//
+//    return n == name.length();
+//}
+
+//vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+//    
+//    int n = nums.size();
+//    vector<int> result(n, 0);
+//    for (int i = 0; i < n - 1; ++i)
+//    {
+//        for (int j = i + 1; j < n; ++j)
+//        {
+//            if (nums[i] < nums[j])
+//            {
+//                ++result[j];
+//            }
+//            else if(nums[j] < nums[i])
+//            {
+//                ++result[i];
+//            }
+//        }
+//    }
+//
+//    return result;
+//}
+
+//bool uniqueOccurrences(vector<int>& arr) {
+//    unordered_map<int, int> tmp;
+//
+//    int n = arr.size();
+//    for (int i = 0; i < n; ++i)
+//    {
+//        ++tmp[arr[i]];
+//    }
+//
+//    unordered_set<int> count;
+//    for (auto& t : tmp)
+//    {
+//        if (count.find(t.second) != count.end())
+//        {
+//            return false;
+//        }
+//
+//        count.insert(t.second);
+//    }
+//
+//    return true;
+//}
+
+int result;
+
+void sumNumbersHelper(TreeNode* root, int value)
+{
     if (root == nullptr)
     {
+        result += value;
         return;
     }
 
-    temp.push_back(root);
-    if (root->val == target)
+    value = value * 10 + root->val;
+
+    if (root->left == nullptr && root->right == nullptr)
     {
-        isEnd = true;
+        result += value;
         return;
     }
 
-    lowestCommonAncestorDfs(root->left, target);
-    lowestCommonAncestorDfs(root->right, target);
-    if (!isEnd)
-    {
-        temp.pop_back();
-    }
+    sumNumbersHelper(root->left, value);
+    sumNumbersHelper(root->right, value);
 }
 
-TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-    isEnd = false;
-    temp.empty();
-    lowestCommonAncestorDfs(root, p->val);
-    vector<TreeNode*> path_p = temp;
-    isEnd = false;
-    temp.clear();
-    lowestCommonAncestorDfs(root, q->val);
-    vector<TreeNode*> path_q = temp;
+int sumNumbers(TreeNode* root) {
 
-    TreeNode* result = root;
-    for (int i = 0; i < path_p.size() && i < path_q.size(); ++i)
+    sumNumbersHelper(root, 0);
+    return result;
+}
+
+vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+    unordered_set<int> set1;
+    unordered_set<int> set2;
+    vector<int> res;
+    for (auto it : nums1)
+        set1.insert(it);
+
+    for (auto it : nums2) {
+        if (set1.find(it) != set1.end()) set2.insert(it);
+    }
+
+    for (auto it : set2) res.push_back(it);
+    return res;
+}
+
+vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+    sort(nums1.begin(), nums1.end());
+    sort(nums2.begin(), nums2.end());
+    int length1 = nums1.size(), length2 = nums2.size();
+    int index1 = 0, index2 = 0;
+    vector<int> intersection;
+    while (index1 < length1 && index2 < length2) {
+        int num1 = nums1[index1], num2 = nums2[index2];
+        if (num1 == num2) {
+            // 保证加入元素的唯一性
+            if (!intersection.size() || num1 != intersection.back()) {
+                intersection.push_back(num1);
+            }
+            index1++;
+            index2++;
+        }
+        else if (num1 < num2) {
+            index1++;
+        }
+        else {
+            index2++;
+        }
+    }
+    return intersection;
+}
+
+bool validMountainArray(vector<int>& A) {
+    int n = A.size();
+    if (n < 3)
     {
-        if (path_p[i] == path_q[i])
+        return false;
+    }
+
+    bool right = false;
+    for (int i = 1; i < n-1; ++i)
+    {
+        
+        if (A[i - 1]<A[i] && A[i]>A[i + 1])
         {
-            result = path_p[i];
+            right = true;
+        }
+        else if (right)
+        {
+            if (!(A[i - 1] > A[i] && A[i] > A[i + 1]))
+            {
+                return false;
+            }
         }
         else
         {
-            break;
+            if (!(A[i - 1] < A[i] && A[i] < A[i + 1]))
+            {
+                return false;
+            }
+        }
+    }
+
+    return right;
+}
+
+bool validMountainArray(vector<int>& A) {
+
+    int n = A.size();
+    if (n < 3)
+    {
+        return false;
+    }
+
+    int left = 0;
+    int right = n - 1;
+    while (left < n - 1 && A[left]>A[left + 1])
+    {
+        ++left;
+    }
+
+    while (right>0  && A[right - 1]>A[right])
+    {
+        --right;
+    }
+
+    return left > 0 && right < n - 1 && left == right;
+}
+
+
+vector<vector<int>> merge(vector<vector<int>>& intervals) {
+    int n = intervals.size();
+    if (n == 0)
+    {
+        return {};
+    }
+
+    sort(intervals.begin(), intervals.end());
+    vector<vector<int>> result;
+    for (int i = 0; i < n; ++i)
+    {
+        int L = intervals[i][0];
+        int R = intervals[i][1];
+        if (!result.size() || result.back()[1] < L)
+        {
+            result.push_back(intervals[i]);
+        }
+        else
+        {
+            result.back()[1] = max(result.back()[1], R);
         }
     }
 
     return result;
 }
 
+vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+    intervals.push_back(newInterval);
+    return merge(intervals);
+}
+
+
 int main()
 {
     std::cout << "Hello World!\n";
 
-    TreeNode a(3);
+    /*TreeNode a(3);
     TreeNode b(5);
     TreeNode c(1);
     a.left = &b;
     a.right = &c;
-    lowestCommonAncestor(&a, &b, &c);
+    lowestCommonAncestor(&a, &b, &c);*/
 
     /*TreeNode a(5);
     TreeNode b(2);
